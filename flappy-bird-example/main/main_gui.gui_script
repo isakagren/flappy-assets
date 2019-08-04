@@ -1,0 +1,21 @@
+local points = 0
+
+function init(self)
+	local points_id = gui.get_node("points")
+	gui.set_text(points_id, "Points: " .. points)
+
+
+	local game_over_id = gui.get_node("game_over")
+	gui.set_enabled(game_over_id, false)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("get_point") then
+		points = points + 1
+		local points_id = gui.get_node("points")
+		gui.set_text(points_id, "Points: " .. points)
+	elseif message_id == hash("game_over") then
+		local game_over_id = gui.get_node("game_over")
+		gui.set_enabled(game_over_id, true)
+	end
+end

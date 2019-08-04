@@ -1,0 +1,17 @@
+function init(self)
+	spawn_pipe()
+	timer.delay(3, true, spawn_pipe)
+end
+
+function spawn_pipe()
+	local pos = go.get_position()
+	
+	local id = factory.create("#factory", pos, nil, nil, 3)
+	go.animate(id, "position.x", go.PLAYBACK_ONCE_FORWARD, -100, 
+		go.EASING_LINEAR, 6, 0, 
+		function()
+			go.delete(id)
+		end)
+end
+
+	

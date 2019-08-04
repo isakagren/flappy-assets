@@ -1,0 +1,38 @@
+local vy = 0
+local g = -1000
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	timer.delay(1.8, false, init_point_incrementer)
+end
+
+function update(self, dt)
+	local position = go.get_position()
+	position.y = position.y + vy * dt
+	vy = vy + g * dt
+	go.set_position(position)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+		if message.other_group == hash("pipe") or message.other_group == hash("ground") then
+			msg.post("/gui#gui", "game_over")
+			go.delete()
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("jump") and action.pressed then
+		vy = 500
+	end
+end
+
+function get_point()
+	msg.post("/gui#gui", "get_point")
+	msg.post("#sound", "play_sound", { gain = 1 })
+end
+
+function init_point_incrementer() 
+	timer.delay(3, true, get_point)
+end
